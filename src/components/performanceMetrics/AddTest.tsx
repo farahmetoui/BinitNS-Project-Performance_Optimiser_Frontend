@@ -9,11 +9,10 @@ import LineBar from "./LineBar";
 import AllMetrics from "./Metrics";
 import MultiSelect from "../form/MultiSelect";
 import Percentage from "./Percentage";
-import { multiOptions, wiseOptions } from "../interfaces/model";
-import { useNavigate } from "react-router-dom";
+import { multiOptions, wiseOptions } from "../../interfaces/model";
 
-export default function AddTest() {
-    const navigate = useNavigate();
+
+export default function AddTest() { 
     const [selectedName, setSelectedName] = useState<string>("");
     const [selectedUrls, setselectedUrls] = useState<string[]>();
     const [progress, setProgress] = useState<number>(0);
@@ -25,7 +24,7 @@ export default function AddTest() {
     let width = 128;
     let height = 128;
 
-    // Define refs for progress circle and percentage
+   
     const progressRingRef = useRef<SVGCircleElement | null>(null);
     const percentageRef = useRef<HTMLSpanElement | null>(null);
     const loadingdivRef = useRef<HTMLDivElement | null>(null);
@@ -93,7 +92,7 @@ export default function AddTest() {
 
     const handleSubmit = async () => {
         if (!selectedName) {
-            alert("Veuillez sélectionner une option.");
+            alert("Select an  option.");
             return;
         }
 
@@ -103,7 +102,7 @@ export default function AddTest() {
             }
 
             socket.on("connect", () => {
-                console.log("Connecté à Socket.IO");
+                console.log("Connected to Socket.IO");
             });
             socket.on("initiateAnalyse", (data) => {
 
@@ -120,7 +119,7 @@ export default function AddTest() {
             });
 
             socket.on("disconnect", () => {
-                console.log(" Déconnecté de Socket.IO");
+                console.log(" Disconnect from the Socket.IO");
             });
 
             updateProgress(1);
@@ -139,7 +138,7 @@ export default function AddTest() {
         if (progress === 100) {
             const timer = setTimeout(() => {
                 setShowMetrics(true);
-            }, 10000);
+            }, 5000);
 
             return () => clearTimeout(timer);
         } else {
@@ -180,7 +179,6 @@ export default function AddTest() {
                             </div>
 
                         </div>
-
                         <Button onClick={handleSubmit}>Save Option</Button>
                     </>
                 )}

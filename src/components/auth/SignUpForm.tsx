@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
-import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "../../icons";
+import { EyeCloseIcon, EyeIcon } from "../../icons";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
-import Checkbox from "../form/input/Checkbox";
 import { createUser } from "../../services/authService";
 import ErrorAlert from "../ui/alert/errorAlert";
 import SuccessAlert from "../ui/alert/suceessAlert";
+import DropdownBox from "../../pages/UiElements/DropDown";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+  const [role, setRole] = useState<string>('')
   let email = useRef<HTMLInputElement>(null);
   let password = useRef<HTMLInputElement>(null);
   let firstName = useRef<HTMLInputElement>(null);
@@ -18,9 +18,10 @@ export default function SignUpForm() {
   let userName = useRef<HTMLInputElement>(null);
   let phonenumber = useRef<HTMLInputElement>(null);
 
+
   const [successLogin, setSuccess] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
-
+  const navigate = useNavigate()
   const handleSubmit = async (e: React.FormEvent) => {
     const emailref = email.current?.value ?? "";
     const passwordref = password.current?.value ?? "";
@@ -32,7 +33,7 @@ export default function SignUpForm() {
     e.preventDefault();
     console.log(emailref);
     try {
-      const response = await createUser(firstNameref, lastNameref, userNameref, emailref, phonenumberref, passwordref);
+      const response = await createUser(firstNameref, lastNameref, userNameref, emailref, phonenumberref, passwordref,"tester");
       if (response) {
         setSuccess(true);
 
@@ -47,10 +48,10 @@ export default function SignUpForm() {
 
   useEffect(() => {
     if (visible || successLogin) {
-      console.log("waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
       const timeoutId = setTimeout(() => {
         setVisible(false);
         setSuccess(false);
+        navigate("/listUsers");
       }, 3000);
 
       return () => clearTimeout(timeoutId);
@@ -82,8 +83,8 @@ export default function SignUpForm() {
               </div>
             </div>
             <form onSubmit={handleSubmit}>
-               {visible && <ErrorAlert isVisible={visible} />}
-                {successLogin && <SuccessAlert isVisible={successLogin} />}
+              {visible && <ErrorAlert isVisible={visible} msg="account created successfully" />}
+              {successLogin && <SuccessAlert isVisible={successLogin} msg="Account creation failed" />}
 
               <div className="space-y-5">
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -118,7 +119,7 @@ export default function SignUpForm() {
 
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   {/* <!-- First Name --> */}
-                  <div className="sm:col-span-1">
+                  <div className="sm:col-span-1 ">
                     <Label>
                       UserName<span className="text-error-500">*</span>
                     </Label>
@@ -147,18 +148,28 @@ export default function SignUpForm() {
 
                   </div>
                 </div>
-                {/* <!-- Email --> */}
-                <div>
-                  <Label>
-                    Email<span className="text-error-500">*</span>
-                  </Label>
-                  <Input
-                    type="email"
-                    ref={email}
-                    id="email"
-                    name="email"
-                    placeholder="Enter the email"
-                  />
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                  {/* <!-- Email --> */}
+                  <div>
+                    <Label>
+                      Email<span className="text-error-500">*</span>
+                    </Label>
+                    <Input
+                      type="email"
+                      ref={email}
+                      id="email2"
+                      name="email"
+                      placeholder="Enter the email"
+                    />
+                  </div>
+                  <div className="py-7">
+                    <DropdownBox
+                      options={[{ label: 'developer' }, { label: 'tester' }]}
+                      onSelect={setRole}
+                      selected={role}
+                    />
+                    
+                  </div>
                 </div>
                 {/* <!-- Password --> */}
                 <div>
@@ -170,6 +181,7 @@ export default function SignUpForm() {
                       placeholder="Enter your password"
                       type={showPassword ? "text" : "password"}
                       ref={password}
+                      id="password"
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
@@ -183,17 +195,11 @@ export default function SignUpForm() {
                     </span>
                   </div>
                 </div>
-
-               
-                <div>
-                  <button className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
-                    create user
-                  </button>
-                </div>
+                <button className="flex items-center my-8 justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
+                  create user
+                </button>
               </div>
             </form>
-
-
           </div>
         </div>
       </div>

@@ -11,36 +11,43 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
   token: null,
-  setToken: () => {},
-  logout: () => {},
+  setToken: () => { },
+  logout: () => { },
   isAuthenticated: false,
   loading: true,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setTokenState] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const setToken = (token: string | null) => {
+   
+    setTokenState(token);
+    if (token) {
+       console.log(token)
+      Cookies.set("authorization", token, {
+        expires: 7,
+        path: "/",
+        sameSite: "Lax",
+      });
+    } else {
+      Cookies.remove("authorization");
+    }
+  };
 
   useEffect(() => {
     const storedToken = Cookies.get("authorization");
-    console.log("Token récupéré au chargement :", storedToken); 
+    console.log("Token récupéré au chargement :", storedToken);
     if (storedToken) {
-      setToken(storedToken);
-    } else {
-      setLoading(false);
+      setTokenState(storedToken);
     }
+    setLoading(false);
   }, []);
-  
-  useEffect(() => {
-    if (token !== null) {
-      setLoading(false);
-    }
-  }, [token]);
-  
+
 
   const logout = () => {
     setToken(null);
-    Cookies.remove("authorization");
   };
 
   const isAuthenticated = !!token;

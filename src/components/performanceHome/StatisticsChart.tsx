@@ -94,7 +94,7 @@ export default function StatisticsChart() {
           colors: ["#6B7280"], // Couleur des labels
         },
         formatter: function (value: number) {
-          return value.toFixed(3); 
+          return value.toFixed(3);
         },
       },
       title: {
@@ -106,6 +106,7 @@ export default function StatisticsChart() {
     },
   };
 
+  const [name, setName] = useState<string>("edison");
   const [chartData, setChartData] = useState<{
     currentYearScores: number[];
     previousYearScores: number[];
@@ -113,20 +114,23 @@ export default function StatisticsChart() {
     currentYearScores: [],
     previousYearScores: [],
   });
-  
+
   const fetchData = async () => {
     try {
-      const data = await getPerformanceAverageByMonth();
+      const data = await getPerformanceAverageByMonth(name);
       console.log("Fetched data: ", data);
       setChartData(data.averages);
     } catch (err) {
       console.error("Failed to fetch performance averages:", err);
     }
   };
-  
-    useEffect(() => {
+
+  useEffect(() => {
+    if (name) {
       fetchData();
-    }, []);
+    }
+  }, [name]);
+
 
   const series = [
     {
@@ -150,7 +154,7 @@ export default function StatisticsChart() {
           </p>
         </div>
         <div className="flex items-start w-full gap-3 sm:justify-end">
-          <ChartTab />
+          <ChartTab setName={setName} />
         </div>
       </div>
 

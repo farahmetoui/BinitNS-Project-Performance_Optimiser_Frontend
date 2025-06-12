@@ -5,15 +5,18 @@ import {
   GroupIcon,
 } from "../../icons";
 import { getNumberOfTests } from "../../services/metricService";
+import { getAllUsers } from "../../services/userService";
 import Badge from "../ui/badge/Badge";
 import { useEffect, useState } from "react";
 
 
-export default function EcommerceMetrics() {
+export default function NumberOfMetrics() {
   const [numberOfTests, setNumberOfTests] = useState<number>();
+  const [numberOfUsers, setNumberOfUsers] = useState<number>();
+  
   const fetchData = async () => {
 
-    try {
+    try { 
       const data = await getNumberOfTests()
       console.log("number of tests ", data);
       setNumberOfTests(data.totalTests);
@@ -23,9 +26,23 @@ export default function EcommerceMetrics() {
       console.log("number of tests not found");
     }
   };
+  const fetchUsers = async () => {
+
+    try {
+      const data = await getAllUsers()
+      console.log("number of tests ", data);
+      setNumberOfUsers(data.numberOfUsers);
+
+    } catch (err) {
+      console.error(err);
+      console.log("number of tests not found");
+    }
+  };
 
   useEffect(() => {
+      console.log("second")
     fetchData();
+    fetchUsers()
   }, []);
 
 
@@ -43,13 +60,13 @@ export default function EcommerceMetrics() {
               Number of Users
             </span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              4
+             {numberOfUsers}
             </h4>
           </div>
-          <Badge color="success">
+          {/* <Badge color="success">
             <ArrowUpIcon />
             11.01%
-          </Badge>
+          </Badge> */}
         </div>
       </div>
       {/* <!-- Metric Item End --> */}

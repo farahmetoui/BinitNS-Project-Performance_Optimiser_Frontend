@@ -5,8 +5,9 @@ import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { MoreDotIcon } from "../../icons";
 import { useEffect, useState } from "react";
 import { getNumberOfTestsByMonth } from "../../services/metricService";
+import ChartTab from "../common/ChartTab";
 
-export default function MonthlySalesChart() {
+export default function MonthlyMetricsChart() {
 
   const options: ApexOptions = {
     colors: ["#fc3c61"], //morgen color 
@@ -91,11 +92,11 @@ export default function MonthlySalesChart() {
   const series = [
     {
       name: "Number Of Tests",
-      data:tabNumberOfTests,
+      data: tabNumberOfTests,
     },
   ];
   const [isOpen, setIsOpen] = useState(false);
- 
+  const [name, setName] = useState<string>("edison");
 
 
   function toggleDropdown() {
@@ -106,19 +107,21 @@ export default function MonthlySalesChart() {
     setIsOpen(false);
   }
   useEffect(() => {
+
     const fetchData = async () => {
       try {
-        const data = await getNumberOfTestsByMonth();
-        setTabNumberOfTests(data); 
+        const data = await getNumberOfTestsByMonth(name);
+        setTabNumberOfTests(data);
         console.log("tableExist ", data);
       } catch (err) {
         console.error("Error to get the table of tests:", err);
       }
     };
-  
-    fetchData();
-  }, []);
-  
+    if (name) {
+      fetchData();
+    }
+  }, [name]);
+
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
@@ -126,36 +129,17 @@ export default function MonthlySalesChart() {
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
           Monthly Tests scores
         </h3>
-        <div className="relative inline-block">
-          <button className="dropdown-toggle" onClick={toggleDropdown}>
-            <MoreDotIcon className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 size-6" />
-          </button>
-          <Dropdown
-            isOpen={isOpen}
-            onClose={closeDropdown}
-            className="w-40 p-2"
-          >
-            <DropdownItem
-              onItemClick={closeDropdown}
-              className="flex w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-            >
-              View More
-            </DropdownItem>
-            <DropdownItem
-              onItemClick={closeDropdown}
-              className="flex w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-            >
-              Delete
-            </DropdownItem>
-          </Dropdown>
-        </div>
+          <div className="flex items-start w-full gap-3 sm:justify-end">
+        <ChartTab setName={setName} />
       </div>
-
+      </div>
+    
       <div className="max-w-full overflow-x-auto custom-scrollbar">
         <div className="-ml-5 min-w-[650px] xl:min-w-full pl-2">
           <Chart options={options} series={series} type="bar" height={180} />
         </div>
       </div>
+
     </div>
   );
 }

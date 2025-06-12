@@ -777,3 +777,14 @@ span.flatpickr-weekday,
 .simplebar-scrollbar.simplebar-visible:before {
   @apply opacity-100;
 }
+.mentions__mention {
+  background-color: #e6f2ff !important;
+  color: #007bff !important;
+  font-weight: bold !important;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+
+
+

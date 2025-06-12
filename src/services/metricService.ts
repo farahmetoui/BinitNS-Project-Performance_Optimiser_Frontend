@@ -1,6 +1,4 @@
-import axios from "axios";
-import { BASE_URL } from "../../config";
-import Cookies from "js-cookie";
+import { getRequest, postRequest } from "./httpService";
 
 const multiOptions = [
     "https://online-we-fe-u.morgenfund.com/#login",
@@ -18,17 +16,11 @@ const multiOptions = [
 
 
 ];
-const token = Cookies.get("authorization");
+
 
 export const fetchMetrics = async (id: string) => {
     try {
-        const response = await axios.get(`${BASE_URL}metrics/${id}`,
-            {
-                headers: {
-                  "Content-Type": "application/json",
-                   Authorization: `Bearer ${token}`, 
-                },}
-        );
+        const response =   await getRequest(`metrics/${id}`);
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -39,13 +31,7 @@ export const fetchMetrics = async (id: string) => {
 
 export const fetchApplications = async () => {
     try {
-        const response = await axios.get(`${BASE_URL}AllApplications`,
-            {
-                headers: {
-                  "Content-Type": "application/json",
-                   Authorization: `Bearer ${token}`, 
-                },}
-        );
+        const response =await getRequest(`AllApplications`);
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -54,26 +40,11 @@ export const fetchApplications = async () => {
     }
 };
 
-export const addMetrics = async (id: string) => {  //kamalhaa mazelet 
-    try {
-        const response = await axios.get(`${BASE_URL}metrics/${id}`);
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.error("Request failed:", error);
-        throw error;
-    }
-};
 
 export const getAppTest = async (id: string) => {
     try {
-        const response = await axios.get(`${BASE_URL}testApp/${id}`,
-            {
-                headers: {
-                  "Content-Type": "application/json",
-                   Authorization: `Bearer ${token}`, 
-                },}
-        );
+        const response =   await getRequest(`testApp/${id}`);
+            
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -84,13 +55,7 @@ export const getAppTest = async (id: string) => {
 
 export const getWebVitalById = async (id: string) => {
     try {
-        const response = await axios.get(`${BASE_URL}webvital/${id}`,
-            {
-                headers: {
-                  "Content-Type": "application/json",
-                   Authorization: `Bearer ${token}`, 
-                },}
-        );
+       const response =   await getRequest(`webvital/${id}`);
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -101,18 +66,11 @@ export const getWebVitalById = async (id: string) => {
 
 export const addTest = async (name: string, urls: string[] = multiOptions) => {
     try {
-      
         if (urls[0] == "All" || urls.length == 0) {
             urls = multiOptions
         }
-        const response = await axios.post(
-            `${BASE_URL}AddMetrics`,
-            { name, urls },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                 Authorization: `Bearer ${token}`, 
-              },})
+        const response = await postRequest(`AddMetrics` ,
+            {name, urls});
         console.log(response.data);
         return response.data.test;
     } catch (error) {
@@ -123,13 +81,7 @@ export const addTest = async (name: string, urls: string[] = multiOptions) => {
 
 export const fetchMetricTest = async () => {
     try {
-        const response = await axios.get(`${BASE_URL}testMetric`,
-            {
-                headers: {
-                  "Content-Type": "application/json",
-                   Authorization: `Bearer ${token}`, 
-                },}
-        );
+        const response = await getRequest("testMetric");           
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -141,13 +93,7 @@ export const fetchMetricTest = async () => {
 
 export const getNumberOfTests = async () => {
     try {
-        const response = await axios.get(`${BASE_URL}getTestsNumber`,
-            {
-                headers: {
-                  "Content-Type": "application/json",
-                   Authorization: `Bearer ${token}`, 
-                },}
-        );
+        const response = await getRequest("getTestsNumber");
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -156,15 +102,10 @@ export const getNumberOfTests = async () => {
     }
 };
 
-export const getNumberOfTestsByMonth = async () => {
+export const getNumberOfTestsByMonth = async (name:string) => {
     try {
-        const response = await axios.get(`${BASE_URL}getTestsNumberBymonth`,
-            {
-                headers: {
-                  "Content-Type": "application/json",
-                   Authorization: `Bearer ${token}`, 
-                },}
-        );
+       const response = await postRequest(`getTestsNumberBymonth` ,
+            {name});
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -173,15 +114,10 @@ export const getNumberOfTestsByMonth = async () => {
     }
 };
 
-export const getPerformanceAverageByMonth = async () => {
+export const getPerformanceAverageByMonth = async (name:string) => {
     try {
-        const response = await axios.get(`${BASE_URL}getAverage`,
-            {
-                headers: {
-                  "Content-Type": "application/json",
-                   Authorization: `Bearer ${token}`, 
-                },}
-        );
+        const response = await postRequest(`getAverage` ,
+            {name});
         console.log(response.data);
         return response.data;
     } catch (error) {

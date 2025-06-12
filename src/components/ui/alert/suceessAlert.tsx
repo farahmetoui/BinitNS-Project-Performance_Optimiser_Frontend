@@ -1,6 +1,5 @@
-import React from 'react';
 
-const SuccessAlert = ({ isVisible }: { isVisible: boolean }) => {
+const SuccessAlert = ({ isVisible , msg }: { isVisible: boolean , msg:string}) => {
   if (!isVisible) return null;
 
 
@@ -39,7 +38,7 @@ const SuccessAlert = ({ isVisible }: { isVisible: boolean }) => {
         </p>
         <p className="overflow-hidden leading-5 break-all text-zinc-400 max-h-10">
           So good!<br />
-          This user  has been created.
+          {msg}
         </p>
       </div>
       <button className="w-16 cursor-pointer focus:outline-none">

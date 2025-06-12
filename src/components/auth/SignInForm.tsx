@@ -8,7 +8,8 @@ import Button from "../ui/button/Button";
 import { loginRequest } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-
+import SuccessAlert from "../ui/alert/suceessAlert";
+import ErrorAlert from "../ui/alert/errorAlert";
 
 export default function SignInForm() {
   const { setToken } = useAuth();
@@ -28,24 +29,23 @@ export default function SignInForm() {
     try {
       const response = await loginRequest(emailref, passwordref);
       if (response) {
-        setSuccess(true);
-        setToken(response.token);
-        navigate("/");
+      
+         setToken(response.token);
+         setSuccess(true);
         console.log("Login successful:", response);
       }
     } catch (error) {
       setVisible(true);
-
     }
   };
 
   useEffect(() => {
     if (visible || successLogin) {
+      
       const timeoutId = setTimeout(() => {
         setVisible(false);
         setSuccess(false);
         if (successLogin) {
-
           navigate("/");
         } else {
           navigate("/signin");
@@ -57,9 +57,9 @@ export default function SignInForm() {
   }, [visible, successLogin]);
 
   return (
-    <div className="flex flex-col flex-1">
+    <div className="flex flex-col flex-1 lg:mt-20">
 
-      <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
+      <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto ">
         <div>
           <div className="mb-5 sm:mb-8">
             <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
@@ -73,7 +73,12 @@ export default function SignInForm() {
             <div className="relative py-3 sm:py-5">
             </div>
             <form onSubmit={handleSubmit}>
-              <div className="space-y-6">
+                
+              <div >
+                 {(successLogin || visible) && (
+                        <div className="fixed inset-0  bg-opacity-20 backdrop-blur-sm flex justify-center items-center z-50">
+                 {successLogin && <SuccessAlert isVisible={successLogin} msg="login with success"/>}
+                   {visible && <ErrorAlert isVisible={visible} msg="login failed" />}  </div> )}
                 <div>
                   <Label>
                     Email <span className="text-error-500">*</span>{" "}

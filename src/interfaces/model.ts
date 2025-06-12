@@ -34,8 +34,10 @@ export interface Test {
   DateofTest: string;
   app: string;
   Metrics: MetricsData[];
+  id: string
 
 }
+
 
 export interface MetricsDataType {
   urlRapport: string;
@@ -47,6 +49,7 @@ export interface MetricsDataType {
   seo: number;
   pwa: number;
   webVitalsId: string;
+  urlJsonRapport: string
 }
 
 export const multiOptions = [
@@ -79,3 +82,13 @@ export const wiseOptions = [
 
 ];
 
+export interface Comments {
+   id: string
+  author:{userName:string} 
+  message: string
+  DateofComment:string
+  timestamp: string
+  type: "general" | "performance" | "accessibility" | "seo" | "bug" | "suggestion"
+  priority?: "low" | "medium" | "high"
+
+}

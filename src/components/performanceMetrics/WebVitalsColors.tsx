@@ -1,4 +1,4 @@
-export const getWebVitalStyle = (name: string, value: number) => {
+export const getWebVitalStyle = (name: string, value: number): { className: string; status: 'good' | 'needs-improvement' | 'poor' } => {
     const thresholds: Record<string, [number, number]> = {
       FCP: [1.8, 3.0],
       LCP: [2.5, 4.0],
@@ -25,9 +25,33 @@ export const getWebVitalStyle = (name: string, value: number) => {
     const avgCondition = isLowerBetter
       ? valueInCorrectUnit <= average
       : valueInCorrectUnit <= average;
-  
-    if (goodCondition) return 'bg-success';
-    if (avgCondition) return 'bg-yellow-200';
-    return 'bg-morgen';
+  if (goodCondition) {
+     return {
+      className: 'bg-green-100 text-green-800 border-green-200',
+      status: 'good',
+    };}
+  if (avgCondition) {
+    return {
+      className: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      status: 'needs-improvement',
+    };
+  }
+   return {
+    className: 'bg-red-100 text-red-800 border-red-200',
+    status: 'poor',
+  };
   };
   
+
+  export const getStatusColor = (status: string) => {
+    switch (status) {
+      case "good":
+        return "bg-green-100"
+      case "needs-improvement":
+        return "bg-yellow-100"
+      case "poor":
+        return "bg-red-100"
+      default:
+        return "bg-gray-200"
+    }
+  }

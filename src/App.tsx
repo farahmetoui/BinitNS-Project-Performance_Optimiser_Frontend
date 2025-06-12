@@ -16,12 +16,15 @@ import FormElements from "./pages/Forms/FormElements";
 import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
-import Home from "./pages/Dashboard/Home";
+import Home from "./components/Dashboard/Home";
 import TestApplication from "./components/performanceHome/TestApplication";
 import AddTest from "./components/performanceMetrics/AddTest";
 import TestDetails from "./components/performanceMetrics/TestDetails";
 import RequireAuth from "./components/auth/RequireAuth";
 import SignUp from "./pages/AuthPages/SignUp";
+import ListOfUsers from "./components/users/ListUsers";
+import TestCommentsDashboard from "./components/comments/comments";
+import LighthouseCommentsDashboard from "./components/comments/comments";
 
 
 export default function App() {
@@ -50,6 +53,9 @@ export default function App() {
               <Route path="/metrics" element={<TestDetails />} />
               <Route path="/addTest" element={<AddTest />} />
               <Route path="/createUser" element={<SignUp />} />
+               <Route path="/listUsers" element={<ListOfUsers />} />
+               {/* <Route path="/allcomments" element={<TestCommentsDashboard />} />
+               <Route path="/testcomments" element={<LighthouseCommentsDashboard />} /> */}
 
               {/* Forms */}
               <Route path="/form-elements" element={<FormElements />} />

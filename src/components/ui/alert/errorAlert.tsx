@@ -1,6 +1,5 @@
-import React from 'react';
 
-const ErrorAlert = ({ isVisible }: { isVisible: boolean }) => {
+const ErrorAlert = ({ isVisible , msg}: { isVisible: boolean ,msg:string }) => {
   if (!isVisible) return null;  
   return (
     // <div
@@ -40,7 +39,7 @@ const ErrorAlert = ({ isVisible }: { isVisible: boolean }) => {
     </p>
     <p className="overflow-hidden leading-5 break-all text-zinc-400 max-h-10">
       Oh no!<br />
-      You should login before posting.
+      {msg}
     </p>
   </div>
   <button className="w-16 cursor-pointer focus:outline-none">

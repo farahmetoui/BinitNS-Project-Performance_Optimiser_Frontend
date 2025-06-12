@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "../ui/table";
 import { fetchApplications } from "../../services/metricService";
-import { ApplicationToTest } from "../interfaces/model";
+import { ApplicationToTest } from "../../interfaces/model";
 import Button from "../ui/button/Button";
 import { useNavigate } from "react-router";
 
