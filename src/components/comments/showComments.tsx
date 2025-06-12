@@ -40,12 +40,8 @@ interface TestCommentsProps {
 
 export default function TestComments({ id , setVisible }: TestCommentsProps) {
 const [commentFilter, setCommentFilter] = useState("all")
-  const [searchQuery, setSearchQuery] = useState("")
-  const [newComment, setNewComment] = useState({
-    type: "",
-    priority: "",
-    content: "",
-  })
+const [searchQuery, setSearchQuery] = useState("")
+  
 const [comments, setComments] = useState<Comments[]>([]);
 
  useEffect(() => {

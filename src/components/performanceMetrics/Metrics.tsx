@@ -14,7 +14,7 @@ import { MetricsDataType } from "../../interfaces/model";
 import { getColorClass } from "./ColorMetric";
 import { generateSimpleReport } from "../../services/pythonService";
 import { getLoadingCard } from "./LoadingCard";
-import { DownloadIcon, EyeIcon, FileTextIcon, GlobeIcon, MessageSquareIcon } from "../../pages/Icons";
+import { DownloadIcon, EyeIcon, FileTextIcon, GlobeIcon } from "../../pages/Icons";
 
 interface AllMetricsProps {
   metricsData?: any[];
