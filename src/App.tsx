@@ -23,8 +23,8 @@ import TestDetails from "./components/performanceMetrics/TestDetails";
 import RequireAuth from "./components/auth/RequireAuth";
 import SignUp from "./pages/AuthPages/SignUp";
 import ListOfUsers from "./components/users/ListUsers";
-import TestCommentsDashboard from "./components/comments/comments";
-import LighthouseCommentsDashboard from "./components/comments/comments";
+import ChangePassword from "./components/auth/ChangePassword";
+
 
 
 export default function App() {
@@ -53,7 +53,8 @@ export default function App() {
               <Route path="/metrics" element={<TestDetails />} />
               <Route path="/addTest" element={<AddTest />} />
               <Route path="/createUser" element={<SignUp />} />
-               <Route path="/listUsers" element={<ListOfUsers />} />
+              <Route path="/listUsers" element={<ListOfUsers />} />
+              <Route path="/newPassword" element={<ChangePassword />} />
                {/* <Route path="/allcomments" element={<TestCommentsDashboard />} />
                <Route path="/testcomments" element={<LighthouseCommentsDashboard />} /> */}
 

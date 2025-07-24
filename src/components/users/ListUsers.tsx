@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { getPaginationTabels } from "../../services/paginationService";
-import { getAllUsers } from "../../services/userService";
+import { deleteUserById, getAllUsers } from "../../services/userService";
 import { ChevronLeftIcon, ChevronRightIcon, FilterIcon, MoreVerticalIcon, PlusIcon, SearchIcon } from "../../pages/Icons";
+import DeleteAlert from "../../pages/UiElements/DeleteAlert";
 
 const getRoleColor = (role: string) => {
   switch (role) {
@@ -11,30 +12,46 @@ const getRoleColor = (role: string) => {
       return "bg-blue-100 text-blue-800 border-blue-200"
     default:
       return "bg-red-100 text-gray-800 border-gray-200"
-  }}
+  }
+}
 export default function ListOfUsers() {
-    const [allUsers, setAllUsers] = useState<any[]>([]);
-    const [users, setUsers] = useState<any[]>([]);
-    const [page, setPage] = useState(1);
-    const limit = 5;
-    const [totalPages, setTotalPages] = useState(1);                      
-    const [searchQuery, setSearchQuery] = useState("")                           
-    const [roleFilter, setRoleFilter] = useState("all")
-    const [showDropdown, setShowDropdown] = useState<string | null>(null)
+  const [allUsers, setAllUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
+  const [page, setPage] = useState(1);
+  const limit = 5;
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("")
+  const [roleFilter, setRoleFilter] = useState("all")
+  const [showDropdown, setShowDropdown] = useState<string | null>(null)
+  const [isOpen, setOpen] = useState<boolean>();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-              const data = await getAllUsers()
-                setAllUsers(data.allUsers);
-            } catch (err) {
-                console.error(err);
-            }
-        };
-        fetchData();
-    }, []);
-     const filteredUsers = users.filter((user) => {
-     const matchesSearch =
+
+  const deleteUser = async (userId: string) => {
+    try {
+
+      const response = await deleteUserById(userId);
+      if (response) {
+        console.log("User deleted successfully:", response);
+        setAllUsers(allUsers.filter(user => user.id !== userId));
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getAllUsers()
+        setAllUsers(data.allUsers);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchData();
+  }, []);
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch =
       user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase())
@@ -44,27 +61,27 @@ export default function ListOfUsers() {
     return matchesSearch && matchesRole
   })
 
-    useEffect(() => {
-        const fetchPage = async () => {
-            try {
-                const paginated = await getPaginationTabels(allUsers, page, limit);
-                if (paginated && paginated.data && Array.isArray(paginated.data)) {
-                    setUsers(paginated.data);
-                    setTotalPages(paginated.totalPages);
-                } else {
-                    console.error("invalid datas paginated", paginated);
-                }
-            } catch (err) {
-                console.error("pagination error:", err);
-            }
-        };
+  useEffect(() => {
+    const fetchPage = async () => {
+      try {
+        const paginated = await getPaginationTabels(allUsers, page, limit);
+        if (paginated && paginated.data && Array.isArray(paginated.data)) {
+          setUsers(paginated.data);
+          setTotalPages(paginated.totalPages);
+        } else {
+          console.error("invalid datas paginated", paginated);
+        }
+      } catch (err) {
+        console.error("pagination error:", err);
+      }
+    };
 
-        fetchPage();
-    }, [allUsers, page]);
+    fetchPage();
+  }, [allUsers, page]);
 
-    return (
-    
- <div className="bg-gray-50 p-6 dark:border-white/[0.05] dark:bg-white/[0.03] dark:text-gray-200">
+  return (
+
+    <div className="bg-gray-50 p-6 dark:border-white/[0.05] dark:bg-white/[0.03] dark:text-gray-200">
       <div className="max-w-7xl ">
         {/* Header */}
         <div className="mb-8">
@@ -73,9 +90,10 @@ export default function ListOfUsers() {
               <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-200">User Management</h1>
               <p className="text-gray-600 mt-2">Manage your team members and their permissions</p>
             </div>
-         
+
           </div>
         </div>
+
 
         {/* Filters and Search */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 dark:border-white/[0.05] dark:bg-white/[0.03] dark:text-gray-200">
@@ -157,8 +175,8 @@ export default function ListOfUsers() {
                         {user.role}
                       </span>
                     </td>
-                  
-                     <td className="py-4 px-6 text-center">
+
+                    <td className="py-4 px-6 text-center">
                       <div className="relative">
                         <button
                           onClick={() => setShowDropdown(showDropdown === user.id ? null : user.id)}
@@ -174,18 +192,31 @@ export default function ListOfUsers() {
                             <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                               View Details
                             </button>
-                            <button className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                            <button
+                              className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                              onClick={() => {
+
+                                setOpen(true);
+                              }}
+                            >
                               Delete
                             </button>
                           </div>
                         )}
                       </div>
                     </td>
+                    {isOpen && (
+                      <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-20">
+                        <DeleteAlert setOpen={setOpen} userId={user.id} deleteUser={deleteUser} />
+                      </div>
+                    )}
                   </tr>
                 ))}
               </tbody>
+
             </table>
           </div>
+
 
           {/* Pagination */}
           <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50">
@@ -194,7 +225,7 @@ export default function ListOfUsers() {
             </div>
             <div className="flex items-center gap-2">
               <button
-               disabled={page === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}
                 className="inline-flex items-center px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ChevronLeftIcon />
@@ -204,7 +235,7 @@ export default function ListOfUsers() {
                 Page {page} of {Math.max(1, totalPages)}
               </span>
               <button
-               disabled={page === totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 className="inline-flex items-center px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next
@@ -215,9 +246,11 @@ export default function ListOfUsers() {
         </div>
 
       </div>
+
     </div>
 
-    );
+
+  );
 }
 
 

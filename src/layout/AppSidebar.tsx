@@ -14,9 +14,13 @@ import {
   PlugInIcon,
   TableIcon,
   UserCircleIcon,
+  UserIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
-import SidebarWidget from "./SidebarWidget";
+import { useAuth } from "../context/AuthContext";
+import { jwtDecode } from 'jwt-decode';
+import NotFound from "../pages/OtherPage/NotFound";
+
 
 type NavItem = {
   name: string;
@@ -24,6 +28,8 @@ type NavItem = {
   path?: string;
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
 };
+  
+
 
 const navItems: NavItem[] = [
   {
@@ -44,14 +50,11 @@ const navItems: NavItem[] = [
   },
 
 
-    {
-    name: "Users",
-    icon: <UserCircleIcon />,
-    subItems: [
-     
-      { name: "create User", path: "/createUser", pro: false },
-      { name: "List of User", path: "/listUsers", pro: false },
-    ],
+
+
+  {
+    name: "Profile", path: "/profile",     
+    icon: <UserIcon />,  
   },
   
 //   {
@@ -83,6 +86,7 @@ const navItems: NavItem[] = [
 //     ],
 //   },
  ];
+ 
 
 // const othersItems: NavItem[] = [
 //   {
@@ -118,6 +122,9 @@ const navItems: NavItem[] = [
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
+  const token = useAuth().token;
+
+  const decoded = token ? jwtDecode<{ id: string ,role:string }>(token) : null;
 
   const [openSubmenu, setOpenSubmenu] = useState<{
     type: "main" | "others";
@@ -134,7 +141,30 @@ const AppSidebar: React.FC = () => {
     [location.pathname]
   );
 
+  const getSidebarItems = useCallback(() => {
+  let items = [...navItems];
+  const alreadyExists = items.some(item => item.name === "Users");
+
+  if (decoded?.role === "admin" && !alreadyExists) {
+    items.splice(2, 0, {
+      name: "Users",
+      icon: <UserCircleIcon />,
+      subItems: [
+        { name: "Create User", path: "/createUser", pro: false },
+        { name: "List of Users", path: "/listUsers", pro: false },
+      ],
+    });
+  } else if (decoded?.role !== "admin" && alreadyExists) {
+    items = items.filter(item => item.name !== "Users");
+  }
+  return items;
+}, [decoded?.role]);
+
+const [sidebarItems, setSidebarItems] = useState<NavItem[]>(getSidebarItems());
+
+
   useEffect(() => {
+    setSidebarItems(getSidebarItems());
     let submenuMatched = false;
     ["main", "others"].forEach((menuType) => {
       const items = menuType === "main" ? navItems : navItems;
@@ -151,14 +181,17 @@ const AppSidebar: React.FC = () => {
           });
         }
       });
-    });
+    }
+  
+  );
 
     if (!submenuMatched) {
       setOpenSubmenu(null);
     }
-  }, [location, isActive]);
+  }, [location, isActive ,getSidebarItems]);
 
   useEffect(() => {
+     
     if (openSubmenu !== null) {
       const key = `${openSubmenu.type}-${openSubmenu.index}`;
       if (subMenuRefs.current[key]) {
@@ -371,7 +404,9 @@ const AppSidebar: React.FC = () => {
                   <HorizontaLDots className="size-6" />
                 )}
               </h2>
-              {renderMenuItems(navItems, "main")}
+              {/* {renderMenuItems(navItems, "main")} */}
+              {renderMenuItems(sidebarItems, "main")}
+
             </div>
             {/* <div className="">
               <h2

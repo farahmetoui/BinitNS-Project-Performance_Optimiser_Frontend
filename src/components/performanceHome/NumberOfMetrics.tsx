@@ -5,8 +5,7 @@ import {
   GroupIcon,
 } from "../../icons";
 import { getNumberOfTests } from "../../services/metricService";
-import { getAllUsers } from "../../services/userService";
-import Badge from "../ui/badge/Badge";
+import { getnumberOfUsers } from "../../services/userService";
 import { useEffect, useState } from "react";
 
 
@@ -29,7 +28,7 @@ export default function NumberOfMetrics() {
   const fetchUsers = async () => {
 
     try {
-      const data = await getAllUsers()
+      const data = await getnumberOfUsers()
       console.log("number of tests ", data);
       setNumberOfUsers(data.numberOfUsers);
 
@@ -40,7 +39,7 @@ export default function NumberOfMetrics() {
   };
 
   useEffect(() => {
-      console.log("second")
+    console.log("second")
     fetchData();
     fetchUsers()
   }, []);

@@ -10,11 +10,13 @@ import AllMetrics from "./Metrics";
 import MultiSelect from "../form/MultiSelect";
 import Percentage from "./Percentage";
 import { multiOptions, wiseOptions } from "../../interfaces/model";
+import { Link } from "react-router";
 
 
-export default function AddTest() { 
+export default function AddTest() {
     const [selectedName, setSelectedName] = useState<string>("");
-    const [selectedUrls, setselectedUrls] = useState<string[]>();
+    const [selectedUrls, setselectedUrls] = useState<string[]>([]);
+    const [customUrl, setCustomUrl] = useState<string>("");
     const [progress, setProgress] = useState<number>(0);
     const [Urls, setUrls] = useState<any[]>([]);
     const [treatedUrlIndex, setTreatedUrlIndex] = useState<number>(-1);
@@ -24,7 +26,7 @@ export default function AddTest() {
     let width = 128;
     let height = 128;
 
-   
+
     const progressRingRef = useRef<SVGCircleElement | null>(null);
     const percentageRef = useRef<HTMLSpanElement | null>(null);
     const loadingdivRef = useRef<HTMLDivElement | null>(null);
@@ -39,6 +41,12 @@ export default function AddTest() {
     };
     const handleSelectUrlChange = (selected: string[]) => {
         setselectedUrls(selected);
+    };
+    const handleAddCustomUrl = () => {
+        if (customUrl && !selectedUrls.includes(customUrl)) {
+            setselectedUrls((prev) => [...prev, customUrl]);
+            setCustomUrl("");
+        }
     };
     const reduceloadersize = () => {
         const interval = setInterval(() => {
@@ -179,6 +187,27 @@ export default function AddTest() {
                             </div>
 
                         </div>
+
+                        {/* Add specific urls  */}
+                        <div className="space-y-2">
+                            <Label>Add custom URLs</Label>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="text"
+                                    value={customUrl}
+                                    onChange={(e) => setCustomUrl(e.target.value)}
+                                    placeholder="Enter custom URL"
+                                    className="border px-3 py-2 rounded w-full"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handleAddCustomUrl}
+                                    className="bg-morgen text-white px-4 py-2 rounded"
+                                >
+                                    Add
+                                </button>
+                            </div></div>
+
                         <Button onClick={handleSubmit}>Save Option</Button>
                     </>
                 )}
@@ -191,11 +220,15 @@ export default function AddTest() {
                                 <Percentage percentageRef={percentageRef} loadingdivRef={loadingdivRef} progressRingRef={progressRingRef} />
                             </>
                         )}
+                        
+                        <div className="flex justify-start items-center mt-4">
                         <Button onClick={() => {
                             window.location.href = "/addTest";
                         }}>
-                            Stop Test
+                            cancel 
                         </Button>
+                        </div>
+                   
 
                     </>
 

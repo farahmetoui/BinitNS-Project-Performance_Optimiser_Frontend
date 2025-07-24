@@ -1,10 +1,4 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
+
 import ComponentCard from "../common/ComponentCard";
 import { webVitaldata } from "../../interfaces/model";
 import { getStatusColor, getWebVitalStyle } from "./WebVitalsColors";

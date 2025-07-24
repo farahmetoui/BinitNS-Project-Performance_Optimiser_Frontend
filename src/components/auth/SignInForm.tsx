@@ -18,6 +18,7 @@ export default function SignInForm() {
   const [isChecked, setIsChecked] = useState(false);
   const [successLogin, setSuccess] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
+  
   let email = useRef<HTMLInputElement>(null);
   let password = useRef<HTMLInputElement>(null);
 
@@ -40,8 +41,7 @@ export default function SignInForm() {
   };
 
   useEffect(() => {
-    if (visible || successLogin) {
-      
+    if (visible || successLogin) {     
       const timeoutId = setTimeout(() => {
         setVisible(false);
         setSuccess(false);
@@ -58,7 +58,6 @@ export default function SignInForm() {
 
   return (
     <div className="flex flex-col flex-1 lg:mt-20">
-
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto ">
         <div>
           <div className="mb-5 sm:mb-8">
@@ -117,10 +116,10 @@ export default function SignInForm() {
                     </span>
                   </div>
                   <Link
-                    to="/reset-password"
+                    to="/newPassword"
                     className="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
                   >
-                    Forgot password?
+                    Change password?
                   </Link>
                 </div>
                 <div>

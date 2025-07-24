@@ -80,10 +80,8 @@ export const AddCommentsCard = ({ UrlLink, testNumber, setVisible, testId }: Add
 
 
     return (
-
         <div className="card flex items-center justify-center  w-full p-4 z-50 ">
             <div className="relative p-4 w-full max-w-xl max-h-full">
-
                 <div className="relative bg-white rounded-lg shadow mx-">
                     {(visibleSuccessAllert || visibleErrorAllert) && (
                         <div className="fixed inset-0  bg-opacity-20 backdrop-blur-sm flex justify-center items-center z-50">

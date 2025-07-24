@@ -67,7 +67,6 @@ export default function AllMetrics({ metricsData = [] }: AllMetricsProps) {
           </div>
         )}
 
-
       </div>
 
               <div className="flex-1 p-6">
