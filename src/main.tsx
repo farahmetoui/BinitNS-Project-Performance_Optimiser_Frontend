@@ -8,14 +8,16 @@ import App from "./App.tsx";
 import { AppWrapper } from "./components/common/PageMeta.tsx";
 import { ThemeProvider } from "./context/ThemeContext.tsx";
 import { AuthProvider } from "./context/AuthContext"; 
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
       <AppWrapper>
         <AuthProvider>
-        <App />
+         <BrowserRouter>
+            <App />
+          </BrowserRouter>
         </AuthProvider>
       </AppWrapper>
     </ThemeProvider>
