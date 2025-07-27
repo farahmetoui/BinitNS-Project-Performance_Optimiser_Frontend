@@ -15,9 +15,7 @@ createRoot(document.getElementById("root")!).render(
     <ThemeProvider>
       <AppWrapper>
         <AuthProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
+        <App />
         </AuthProvider>
       </AppWrapper>
     </ThemeProvider>
