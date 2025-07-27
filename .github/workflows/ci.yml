@@ -30,3 +30,7 @@ jobs:
           sleep 5
           curl -f http://localhost:5173/ || exit 1
           kill $(jobs -p)
+
+      - name: Trigger Render Deploy
+        run: curl -X POST ${{ secrets.FRONTEND_DEPLOY_HOOK }}
+
