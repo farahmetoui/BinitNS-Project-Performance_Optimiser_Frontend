@@ -6,7 +6,7 @@ import svgr from "vite-plugin-svgr";
 export default defineConfig({
   server: {
     proxy: {
-      '/reports': 'http://localhost:3000',
+      '/reports': 'https://binitns-project-performance-optimiser.onrender.com',
     },
   },
   
